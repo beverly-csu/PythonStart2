@@ -59,4 +59,11 @@ right_side.addLayout(h_6)
 right_side.addLayout(h_7)
 right_side.addLayout(h_8)
 right_side.addLayout(h_9)
+
+left_side.addWidget(note_field)
+
+main_layout.addLayout(left_side)
+main_layout.addLayout(right_side)
+
+window.setLayout(main_layout)
 # Распределение виджетов
