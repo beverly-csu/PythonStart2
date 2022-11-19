@@ -36,3 +36,27 @@ h_7 = QHBoxLayout()
 h_8 = QHBoxLayout()
 h_9 = QHBoxLayout()
 # Создание лэйаутов
+
+# Распределение виджетов
+h_1.addWidget(lbl_for_notes)
+h_2.addWidget(notes_list)
+h_3.addWidget(btn_create_note)
+h_3.addWidget(btn_delete_note)
+h_4.addWidget(btn_save_note)
+h_5.addWidget(lbl_for_tags)
+h_6.addWidget(tags_list)
+h_7.addWidget(search_tag_field)
+h_8.addWidget(btn_add_tag)
+h_8.addWidget(btn_remove_tag)
+h_9.addWidget(btn_search_by_tag)
+
+right_side.addLayout(h_1)
+right_side.addLayout(h_2)
+right_side.addLayout(h_3)
+right_side.addLayout(h_4)
+right_side.addLayout(h_5)
+right_side.addLayout(h_6)
+right_side.addLayout(h_7)
+right_side.addLayout(h_8)
+right_side.addLayout(h_9)
+# Распределение виджетов
