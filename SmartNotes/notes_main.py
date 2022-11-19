@@ -2,6 +2,21 @@ from PyQt5.QtWidgets import (
     QApplication, QWidget, QPushButton, QLabel, QVBoxLayout,
     QHBoxLayout, QLineEdit, QTextEdit, QListWidget
 )
+import json
+
+# Базовая структура файлов с заметками
+notes = {
+    "Приветствуем в приложении": {
+        "текст": "Вы можете пользовать приложением как угодно!",
+        "теги": ["начало", "приветствие"]
+    }
+}
+# Базовая структура файлов с заметками
+
+# Запись стартовой заметки
+with open('notes.json', 'w', encoding='utf-8') as file:
+    json.dump(notes, file)
+# Запись стартовой заметки
 
 # Создание виджетов
 app = QApplication([])
@@ -67,3 +82,14 @@ main_layout.addLayout(right_side)
 
 window.setLayout(main_layout)
 # Распределение виджетов
+
+# Преднастройка приложения
+window.resize(600, 400)
+window.setWindowTitle('Умные заметки')
+search_tag_field.setPlaceholderText('Введите тег...')
+# Преднастройка приложения
+
+# Запуск приложения
+window.show()
+app.exec()
+# Запуск приложения
