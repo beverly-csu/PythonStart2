@@ -4,6 +4,27 @@ from PyQt5.QtWidgets import (
 )
 import json
 
+# Функции для различных обработок
+def show_note():
+    text = notes_list.selectedItems()[0].text()
+    note = notes[text]['текст']
+    note_field.setText(note)
+
+def load_notes():
+    global notes
+    with open('notes.json', 'r', encoding='utf-8') as file:
+        notes = json.load(file)
+    notes_list.addItems(notes)
+
+def save_note():
+    global notes
+    text = notes_list.selectedItems()[0].text()
+    note = note_field.toPlainText()
+    notes[text]['текст'] = note
+    with open('notes.json', 'w', encoding='utf-8') as file:
+        json.dump(notes, file)
+# Функции для различных обработок
+
 # Базовая структура файлов с заметками
 notes = {
     "Приветствуем в приложении": {
@@ -14,8 +35,8 @@ notes = {
 # Базовая структура файлов с заметками
 
 # Запись стартовой заметки
-with open('notes.json', 'w', encoding='utf-8') as file:
-    json.dump(notes, file)
+# with open('notes.json', 'w', encoding='utf-8') as file:
+#     json.dump(notes, file)
 # Запись стартовой заметки
 
 # Создание виджетов
@@ -87,9 +108,12 @@ window.setLayout(main_layout)
 window.resize(600, 400)
 window.setWindowTitle('Умные заметки')
 search_tag_field.setPlaceholderText('Введите тег...')
+notes_list.itemClicked.connect(show_note)
+btn_save_note.clicked.connect(save_note)
 # Преднастройка приложения
 
 # Запуск приложения
+load_notes()
 window.show()
 app.exec()
 # Запуск приложения
