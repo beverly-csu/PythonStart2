@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QPushButton, QLabel, QVBoxLayout,
-    QHBoxLayout, QLineEdit, QTextEdit, QListWidget
+    QHBoxLayout, QLineEdit, QTextEdit, QListWidget, QInputDialog
 )
 import json
 
@@ -23,6 +23,10 @@ def save_note():
     notes[text]['текст'] = note
     with open('notes.json', 'w', encoding='utf-8') as file:
         json.dump(notes, file)
+
+def add_note():
+    note_name, result = QInputDialog.getText(window, 'Добавить заметку', 'Название заметки:')
+    print(note_name, result)
 # Функции для различных обработок
 
 # Базовая структура файлов с заметками
@@ -110,6 +114,7 @@ window.setWindowTitle('Умные заметки')
 search_tag_field.setPlaceholderText('Введите тег...')
 notes_list.itemClicked.connect(show_note)
 btn_save_note.clicked.connect(save_note)
+btn_create_note.clicked.connect(add_note)
 # Преднастройка приложения
 
 # Запуск приложения
