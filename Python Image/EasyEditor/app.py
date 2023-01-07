@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
-from PIL import Image
+from PIL import Image, ImageFilter
 import os
 
 # Создание виджетов
@@ -77,6 +77,30 @@ class ImageProccesor:
         path = os.path.join(path, self.filename)
         self.image.save(path)
 
+    def do_flip(self):
+        self.image = self.image.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
+        self.saveImage()
+        path = os.path.join(self.dir, self.save_dir, self.filename)
+        self.showImage(path)
+
+    def do_left(self):
+        self.image = self.image.transpose(Image.Transpose.ROTATE_90)
+        self.saveImage()
+        path = os.path.join(self.dir, self.save_dir, self.filename)
+        self.showImage(path)
+
+    def do_right(self):
+        self.image = self.image.transpose(Image.Transpose.ROTATE_270)
+        self.saveImage()
+        path = os.path.join(self.dir, self.save_dir, self.filename)
+        self.showImage(path)
+
+    def do_sharpen(self):
+        self.image = self.image.filter(ImageFilter.SHARPEN)
+        self.saveImage()
+        path = os.path.join(self.dir, self.save_dir, self.filename)
+        self.showImage(path)
+    
 imgProc = ImageProccesor()
 
 def showCurrentImage():
@@ -115,6 +139,10 @@ def filter(files, extensions):
 # Привязка кнопок
 btn_open_dir.clicked.connect(showFiles)
 btn_black_white.clicked.connect(imgProc.do_bw)
+btn_mirror.clicked.connect(imgProc.do_flip)
+btn_rotate_left.clicked.connect(imgProc.do_left)
+btn_rotate_left.clicked.connect(imgProc.do_right)
+btn_contrast.clicked.connect(imgProc.do_sharpen)
 image_list.currentRowChanged.connect(showCurrentImage)
 # Привязка кнопок
 
