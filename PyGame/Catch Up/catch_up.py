@@ -1,4 +1,3 @@
-from os import close
 from pygame import *
 
 #создай окно игры
