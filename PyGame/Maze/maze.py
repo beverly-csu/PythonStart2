@@ -45,17 +45,40 @@ class Enemy(GameSprite):
         if self.direction == 'right':
             self.rect.x += self.speed
 
+class Wall(sprite.Sprite):
+    def __init__(self, c1, c2, c3, wall_x, wall_y, width, height):
+        super().__init__()
+        self.color1 = c1
+        self.color2 = c2
+        self.color3 = c3
+        self.width = width
+        self.height = height
+        self.image = Surface((width, height))
+        self.image.fill((c1, c2, c3))
+        self.rect = self.image.get_rect()
+        self.rect.x = wall_x
+        self.rect.y = wall_y
+
+    def draw(self):
+        window.blit(self.image, (self.rect.x, self.rect.y))
+
 hero = Player('hero.png', 100, 200, 5)
 enemy = Enemy('cyborg.png', 620, 300, 3)
 treasure = GameSprite('treasure.png', 400, 400, 0)
 
-rect1 = rect.Rect(x1, y1, width, height)
-rect1 = rect.Rect(x2, y2, width, height)
+w1 = Wall(154, 205, 50, 100, 20, 450, 10)
+w2 = Wall(154, 205, 50, 100, 480, 350, 10)
+w3 = Wall(154, 205, 50, 100, 20, 10, 380)
+
 # mixer.init()
 # mixer.music.load('jungles.ogg')
 # mixer.music.play()
 
+font.init()
+win = font.Font(None, 70).render('You win!', True, (0, 255, 255))
+
 game = True
+finish = False
 while game:
     for e in event.get():
         if e.type == QUIT:
@@ -68,6 +91,10 @@ while game:
     enemy.update()
     enemy.reset()
     treasure.reset()
+
+    w1.draw()
+    w2.draw()
+    w3.draw()
 
     display.update()
     clock.tick(FPS)
