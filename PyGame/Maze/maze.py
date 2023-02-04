@@ -76,6 +76,7 @@ w3 = Wall(154, 205, 50, 100, 20, 10, 380)
 
 font.init()
 win = font.Font(None, 70).render('You win!', True, (0, 255, 255))
+lose = font.Font(None, 70).render('You lose!', True, (255, 0, 0))
 
 game = True
 finish = False
@@ -84,17 +85,26 @@ while game:
         if e.type == QUIT:
             game = False
 
-    window.blit(background, (0, 0))
-
-    hero.update()
-    hero.reset()
-    enemy.update()
-    enemy.reset()
-    treasure.reset()
-
-    w1.draw()
-    w2.draw()
-    w3.draw()
+    if not finish:
+        window.blit(background, (0, 0))
+        hero.update()
+        hero.reset()
+        enemy.update()
+        enemy.reset()
+        treasure.reset()
+        w1.draw()
+        w2.draw()
+        w3.draw()
+        if sprite.collide_rect(hero, treasure):
+            result = win
+            finish = True
+        if sprite.collide_rect(hero, w1) or sprite.collide_rect(hero, w2) \
+            or sprite.collide_rect(hero, w3) or \
+                sprite.collide_rect(hero, enemy):
+            finish = True
+            result = lose
+    else:
+        window.blit(result, (200, 200))
 
     display.update()
     clock.tick(FPS)
