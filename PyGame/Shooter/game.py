@@ -1,4 +1,5 @@
 from pygame import *
+import random
 
 class GameSprite(sprite.Sprite):
     def __init__(self, player_image, x, y, speed):
@@ -24,6 +25,16 @@ class Player(GameSprite):
     def fire(self):
         fire_sound.play()
 
+class Enemy(GameSprite):
+    def update(self):
+        global lost
+        self.rect.y += self.speed
+        if self.rect.y > height:
+            self.rect.y = -100
+            self.rect.x = random.randint(0, width - self.rect.width)
+            lost += 1
+
+lost = 0
 width, height = 700, 500 
 window = display.set_mode((width, height))
 display.set_caption('Shooter')
@@ -31,23 +42,34 @@ display.set_caption('Shooter')
 FPS = 60
 clock = time.Clock()
 
-mixer.init()
-mixer.music.load('bg.ogg')
-mixer.music.play()
-fire_sound = mixer.Sound('fire.wav')
+# mixer.init()
+# mixer.music.load('bg.ogg')
+# mixer.music.play()
+# fire_sound = mixer.Sound('fire.wav')
 
 background = transform.scale(image.load('bg.jpg'), (width, height))
 player = Player('player.png', (width - 65) // 2, height - 70, 10)
+monsters = sprite.Group()
+for i in range(5):
+    x = random.randint(0, width - 80)
+    speed = random.randint(1, 8)
+    enemy = Enemy('enemy.png', x, -100, speed)
+    monsters.add(enemy)
 
 finish = False
-while not finish:
-    window.blit(background, (0, 0))
-    player.update()
-    player.reset()
+run = True
+while run:
+    if not finish:
+        window.blit(background, (0, 0))
+        player.update()
+        player.reset()
+
+        monsters.update()
+        monsters.draw(window)
 
     for e in event.get():
         if e.type == QUIT:
-            finish = True
+            run = False
 
     clock.tick(FPS)
     display.update()
