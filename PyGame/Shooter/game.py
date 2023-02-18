@@ -1,4 +1,5 @@
 from pygame import *
+font.init()
 import random
 
 class GameSprite(sprite.Sprite):
@@ -35,12 +36,15 @@ class Enemy(GameSprite):
             lost += 1
 
 lost = 0
+score = 0
 width, height = 700, 500 
 window = display.set_mode((width, height))
 display.set_caption('Shooter')
 
 FPS = 60
 clock = time.Clock()
+
+my_font = font.Font('Lemon Tuesday.otf', 40)
 
 # mixer.init()
 # mixer.music.load('bg.ogg')
@@ -66,6 +70,11 @@ while run:
 
         monsters.update()
         monsters.draw(window)
+
+        score_text = my_font.render('Счёт: ' + str(score), True, (230, 230, 230))
+        lost_text = my_font.render('Пропущенно: ' + str(lost), True, (230, 230, 230))
+        window.blit(score_text, (10, 10))
+        window.blit(lost_text, (10, 50))
 
     for e in event.get():
         if e.type == QUIT:
