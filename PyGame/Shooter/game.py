@@ -3,10 +3,10 @@ font.init()
 import random
 
 class GameSprite(sprite.Sprite):
-    def __init__(self, player_image, x, y, speed):
+    def __init__(self, player_image, x, y, speed, width=65, height=65):
         super().__init__()
         self.speed = speed
-        self.image = transform.scale(image.load(player_image), (65, 65))
+        self.image = transform.scale(image.load(player_image), (width, height))
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -25,6 +25,11 @@ class Player(GameSprite):
             self.fire()
     def fire(self):
         fire_sound.play()
+        x = self.rect.centerx
+        y = self.rect.y         # self.rect.top
+        bullet = Bullet('bullet.png', x, y, 10, 10, 20)
+        #bullet.rect.x -= bullet.rect.width // 2
+        bullets.add(bullet)
 
 class Enemy(GameSprite):
     def update(self):
@@ -34,6 +39,12 @@ class Enemy(GameSprite):
             self.rect.y = -100
             self.rect.x = random.randint(0, width - self.rect.width)
             lost += 1
+
+class Bullet(GameSprite):
+    def update(self):
+        self.rect.y -= self.speed
+        if self.rect.y < -self.rect.height:
+            self.kill()
 
 lost = 0
 score = 0
@@ -46,10 +57,11 @@ clock = time.Clock()
 
 my_font = font.Font('Lemon Tuesday.otf', 40)
 
-# mixer.init()
-# mixer.music.load('bg.ogg')
-# mixer.music.play()
-# fire_sound = mixer.Sound('fire.wav')
+mixer.init()
+mixer.music.load('bg.ogg')
+mixer.music.play()
+mixer.music.set_volume(0.3)         # звук на 30%
+fire_sound = mixer.Sound('fire.wav')
 
 background = transform.scale(image.load('bg.jpg'), (width, height))
 player = Player('player.png', (width - 65) // 2, height - 70, 10)
@@ -59,6 +71,8 @@ for i in range(5):
     speed = random.randint(1, 8)
     enemy = Enemy('enemy.png', x, -100, speed)
     monsters.add(enemy)
+
+bullets = sprite.Group()
 
 finish = False
 run = True
@@ -70,6 +84,9 @@ while run:
 
         monsters.update()
         monsters.draw(window)
+
+        bullets.update()
+        bullets.draw(window)
 
         score_text = my_font.render('Счёт: ' + str(score), True, (230, 230, 230))
         lost_text = my_font.render('Пропущенно: ' + str(lost), True, (230, 230, 230))
