@@ -112,11 +112,11 @@ while run:
             # window.blit(win_text, (270, 200))
             ## 1 вариант
             ## 2 вариант
-            win_text = my_font.render('Вы выиграли!', True, (230, 230, 230))
-            text_rect = win_text.get_rect()
+            result_text = my_font.render('Вы выиграли!', True, (230, 230, 230))
+            text_rect = result_text.get_rect()
             bg_rect = background.get_rect()
             text_rect.center = bg_rect.center
-            window.blit(win_text, (text_rect.x, text_rect.y))
+            window.blit(result_text, (text_rect.x, text_rect.y))
             ## 2 вариант
             finish = True
         if lost >= 3:
@@ -125,13 +125,32 @@ while run:
             # window.blit(win_text, (270, 200))
             ## 1 вариант
             ## 2 вариант
-            lose_text = my_font.render('Вы проиграли!', True, (230, 230, 230))
-            text_rect = lose_text.get_rect()
+            result_text = my_font.render('Вы проиграли!', True, (230, 230, 230))
+            text_rect = result_text.get_rect()
             bg_rect = background.get_rect()
             text_rect.center = bg_rect.center
-            window.blit(lose_text, (text_rect.x, text_rect.y))
+            window.blit(result_text, (text_rect.x, text_rect.y))
             ## 2 вариант
             finish = True
+        last_time = millis()
+    else:
+        window.blit(background, (0, 0))
+        window.blit(result_text, (text_rect.x, text_rect.y))
+        if millis() - last_time > 5:
+            score = 0
+            lost = 0
+            bg_rect = background.get_rect()
+            player.rect.centerx = bg_rect.centerx
+            monsters.empty()
+            for i in range(5):
+                x = random.randint(0, width - 80)
+                speed = random.randint(1, 8)
+                enemy = Enemy('enemy.png', x, -100, speed)
+                monsters.add(enemy)
+            bullets.empty()
+            finish = False
+            
+
 
 
     for e in event.get():
