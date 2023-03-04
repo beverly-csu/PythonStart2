@@ -1,3 +1,4 @@
+from time import time as millis
 from pygame import *
 font.init()
 import random
@@ -15,6 +16,7 @@ class GameSprite(sprite.Sprite):
         window.blit(self.image, (self.rect.x, self.rect.y))
 
 class Player(GameSprite):
+    prev_shot = millis()
     def update(self):
         keys = key.get_pressed()
         if keys[K_a] and self.rect.x > 5:
@@ -24,12 +26,13 @@ class Player(GameSprite):
         if keys[K_SPACE]:
             self.fire()
     def fire(self):
-        fire_sound.play()
-        x = self.rect.centerx
-        y = self.rect.y         # self.rect.top
-        bullet = Bullet('bullet.png', x, y, 10, 10, 20)
-        #bullet.rect.x -= bullet.rect.width // 2
-        bullets.add(bullet)
+        if millis() - self.prev_shot > 0.2:
+            fire_sound.play()
+            x = self.rect.centerx
+            y = self.rect.y
+            bullet = Bullet('bullet.png', x, y, 10, 10, 20)
+            bullets.add(bullet)
+            self.prev_shot = millis()
 
 class Enemy(GameSprite):
     def update(self):
@@ -60,8 +63,9 @@ my_font = font.Font('Lemon Tuesday.otf', 40)
 mixer.init()
 mixer.music.load('bg.ogg')
 mixer.music.play()
-mixer.music.set_volume(0.3)         # звук на 30%
+mixer.music.set_volume(0.05)
 fire_sound = mixer.Sound('fire.wav')
+fire_sound.set_volume(0.05)
 
 background = transform.scale(image.load('bg.jpg'), (width, height))
 player = Player('player.png', (width - 65) // 2, height - 70, 10)
@@ -92,6 +96,43 @@ while run:
         lost_text = my_font.render('Пропущенно: ' + str(lost), True, (230, 230, 230))
         window.blit(score_text, (10, 10))
         window.blit(lost_text, (10, 50))
+
+        collided = sprite.groupcollide(monsters, bullets, True, True)
+        if len(collided) != 0:
+            for i in range(len(collided)):
+                score += 1
+                x = random.randint(0, width - 80)
+                speed = random.randint(1, 8)
+                enemy = Enemy('enemy.png', x, -100, speed)
+                monsters.add(enemy)
+
+        if score >= 10:
+            ## 1 вариант
+            # win_text = my_font.render('Вы выиграли!', True, (230, 230, 230))
+            # window.blit(win_text, (270, 200))
+            ## 1 вариант
+            ## 2 вариант
+            win_text = my_font.render('Вы выиграли!', True, (230, 230, 230))
+            text_rect = win_text.get_rect()
+            bg_rect = background.get_rect()
+            text_rect.center = bg_rect.center
+            window.blit(win_text, (text_rect.x, text_rect.y))
+            ## 2 вариант
+            finish = True
+        if lost >= 3:
+            ## 1 вариант
+            # win_text = my_font.render('Вы проиграли!', True, (230, 230, 230))
+            # window.blit(win_text, (270, 200))
+            ## 1 вариант
+            ## 2 вариант
+            lose_text = my_font.render('Вы проиграли!', True, (230, 230, 230))
+            text_rect = lose_text.get_rect()
+            bg_rect = background.get_rect()
+            text_rect.center = bg_rect.center
+            window.blit(lose_text, (text_rect.x, text_rect.y))
+            ## 2 вариант
+            finish = True
+
 
     for e in event.get():
         if e.type == QUIT:
