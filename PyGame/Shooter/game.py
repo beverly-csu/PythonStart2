@@ -49,6 +49,14 @@ class Bullet(GameSprite):
         if self.rect.y < -self.rect.height:
             self.kill()
 
+class Obstacle(GameSprite):
+    def update(self):
+        self.rect.y += self.speed
+        if self.rect.y > height:
+            self.rect.y = -100
+            self.rect.x = random.randint(0, width - self.rect.width)
+            self.speed = random.randint(1, 5)
+
 lost = 0
 score = 0
 width, height = 700, 500 
@@ -77,6 +85,14 @@ for i in range(5):
     enemy = Enemy('enemy.png', x, -100, speed)
     monsters.add(enemy)
 
+obstacles = sprite.Group()
+for i in range(3):
+    x = random.randint(0, width - 80)
+    speed = random.randint(1, 5)
+    obstacle = Obstacle('asteroid.png', x, -100, speed)
+    obstacles.add(obstacle)
+
+
 bullets = sprite.Group()
 
 finish = False
@@ -89,6 +105,9 @@ while run:
 
         monsters.update()
         monsters.draw(window)
+
+        obstacles.update()
+        obstacles.draw(window)
 
         bullets.update()
         bullets.draw(window)
