@@ -59,6 +59,7 @@ FPS = 60
 clock = time.Clock()
 
 my_font = font.Font('Lemon Tuesday.otf', 40)
+my_font2 = font.Font('Lemon Tuesday.otf', 72)
 
 mixer.init()
 mixer.music.load('bg.ogg')
@@ -112,7 +113,7 @@ while run:
             # window.blit(win_text, (270, 200))
             ## 1 вариант
             ## 2 вариант
-            result_text = my_font.render('Вы выиграли!', True, (230, 230, 230))
+            result_text = my_font2.render('Вы выиграли!', True, (230, 230, 230))
             text_rect = result_text.get_rect()
             bg_rect = background.get_rect()
             text_rect.center = bg_rect.center
@@ -125,7 +126,7 @@ while run:
             # window.blit(win_text, (270, 200))
             ## 1 вариант
             ## 2 вариант
-            result_text = my_font.render('Вы проиграли!', True, (230, 230, 230))
+            result_text = my_font2.render('Вы проиграли!', True, (230, 230, 230))
             text_rect = result_text.get_rect()
             bg_rect = background.get_rect()
             text_rect.center = bg_rect.center
