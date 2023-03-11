@@ -17,6 +17,8 @@ class GameSprite(sprite.Sprite):
 
 class Player(GameSprite):
     prev_shot = millis()
+    rel_flag = False
+    num_fire = 0
     def update(self):
         keys = key.get_pressed()
         if keys[K_a] and self.rect.x > 5:
@@ -26,6 +28,11 @@ class Player(GameSprite):
         if keys[K_SPACE]:
             self.fire()
     def fire(self):
+        if self.rel_flag and millis() - self.prev_shot < 3:
+            return
+        if self.rel_flag and millis() - self.prev_shot > 3:
+            self.rel_flag = False
+            self.num_fire = 0
         if millis() - self.prev_shot > 0.2:
             fire_sound.play()
             x = self.rect.centerx
@@ -33,6 +40,10 @@ class Player(GameSprite):
             bullet = Bullet('bullet.png', x, y, 10, 10, 20)
             bullets.add(bullet)
             self.prev_shot = millis()
+            self.num_fire += 1
+            if self.num_fire >= 5:
+                self.rel_flag = True
+
 
 class Enemy(GameSprite):
     def update(self):
@@ -59,7 +70,7 @@ class Obstacle(GameSprite):
 
 lost = 0
 score = 0
-width, height = 700, 500 
+width, height = 1280, 720 
 window = display.set_mode((width, height))
 display.set_caption('Shooter')
 
@@ -126,11 +137,13 @@ while run:
                 enemy = Enemy('enemy.png', x, -100, speed)
                 monsters.add(enemy)
 
+        if len(sprite.spritecollide(player, obstacles, True)):
+            x = random.randint(0, width - 80)
+            speed = random.randint(1, 5)
+            obstacle = Obstacle('asteroid.png', x, -100, speed)
+            obstacles.add(obstacle)
+
         if score >= 10:
-            ## 1 вариант
-            # win_text = my_font.render('Вы выиграли!', True, (230, 230, 230))
-            # window.blit(win_text, (270, 200))
-            ## 1 вариант
             ## 2 вариант
             result_text = my_font2.render('Вы выиграли!', True, (230, 230, 230))
             text_rect = result_text.get_rect()
@@ -140,10 +153,6 @@ while run:
             ## 2 вариант
             finish = True
         if lost >= 3:
-            ## 1 вариант
-            # win_text = my_font.render('Вы проиграли!', True, (230, 230, 230))
-            # window.blit(win_text, (270, 200))
-            ## 1 вариант
             ## 2 вариант
             result_text = my_font2.render('Вы проиграли!', True, (230, 230, 230))
             text_rect = result_text.get_rect()
